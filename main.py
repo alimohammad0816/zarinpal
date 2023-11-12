@@ -1,58 +1,8 @@
 import requests
-from enum import Enum
-from pydantic import BaseModel, validate_call
+from pydantic import validate_call
 
-
-class CurrencyEnum(Enum):
-    IRT = "IRT"
-    IRR = "IRR"
-
-
-class MetaData(BaseModel):
-    mobile: str = None
-    email: str = None
-    order_id: str = None
-
-
-class RequestResponseData(BaseModel):
-    code: int
-    message: str
-    authority: str
-    fee_type: str
-    fee: int
-
-
-class VerifyResponseData(BaseModel):
-    code: int
-    message: str
-    card_hash: str
-    card_pan: str
-    ref_id: int
-    fee_type: str
-    fee: int
-
-
-class RequestInput(BaseModel):
-    amount: int
-    description: str
-    callback_url: str
-    currency: CurrencyEnum = None
-    metadata: MetaData = None
-
-
-class VerifyInput(BaseModel):
-    authority: str
-    amount: int
-
-
-class RequestResponse(BaseModel):
-    data: RequestResponseData
-    errors: list = []
-
-
-class VerifyResponse(BaseModel):
-    data: VerifyResponseData
-    errors: list = []
+from errors import ERROR_DICT
+from models import RequestInput, RequestResponse, VerifyInput, VerifyResponse, UnVerifiedResponse
 
 
 class ZarinPal:
@@ -65,11 +15,14 @@ class ZarinPal:
             "https://api.zarinpal.com/pg/v4/payment/request.json",
             json={"merchant_id": self.merchant_id, **data.model_dump(exclude_none=True)}
         ).json()
-        if result["data"] and not result["errors"] == 100:
+        if result["data"] and result["data"]["code"] == "100":
             return RequestResponse(**result)
 
         else:
-            print(result)
+            raise ERROR_DICT.get(
+                result["errors"]["code"],
+                Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
+            )
 
     @staticmethod
     def get_payment_link(authority: str) -> str:
@@ -81,8 +34,33 @@ class ZarinPal:
             "https://api.zarinpal.com/pg/v4/payment/verify.json",
             json={"merchant_id": self.merchant_id, **data.model_dump(exclude_none=True)}
         ).json()
-        if result["data"] and not result["errors"]:
+        if result["data"] and result["data"]["code"] == "100":
             return VerifyResponse(**result)
 
         else:
-            print(result)
+            raise ERROR_DICT.get(
+                result["errors"]["code"],
+                Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
+            )
+
+    def un_verified(self) -> UnVerifiedResponse:
+        """
+        متد unverified در مواردی استفاد می‌شود که نیازمند اطلاعات پرداخت‌هایی هستید
+        که توسط وب‌سرویس به درستی انجام شده است، اما متد verifyروی آنها اعمال نشده است.
+        به عبارت دیگر این متد لیست پرداخت‌های موفق اعتبارسنجی نشده را نشان می‌دهد.
+        نكته : حداکثر تعداد تراکنشی که در این روش بازگردانی می‌شوند،
+        محدود به ۱۰۰ تراکنش آخری است که اعتبارسنجی نشده اند.
+        :return: UnVerifiedResponse
+        """
+        result = requests.post(
+            "https://api.zarinpal.com/pg/v4/payment/unVerified.json",
+            json={"merchant_id": self.merchant_id}
+        ).json()
+        if result["data"] and result["data"]["code"] == "100":
+            return UnVerifiedResponse(**result)
+
+        else:
+            raise ERROR_DICT.get(
+                result["errors"]["code"],
+                Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
+            )

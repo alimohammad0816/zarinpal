@@ -124,3 +124,39 @@ class IbanNotSetError(Exception):
 class WagesError(Exception):
     def __str__(self):
         return "خطایی رخ داده است به امور مشتریان زرین پال اطلاع دهید"
+
+
+# error code -9
+class ZibalValidationError(Exception):
+    def __str__(self):
+        return ("\nمرچنت کد داخل تنظیمات وارد نشده باشد"
+                "\nآدرس بازگشت (callbackurl) وارد نشده باشد"
+                "\nتوضیحات (description ) وارد نشده باشد و یا از حد مجاز 500 کارکتر بیشتر باشد"
+                "\nمبلغ پرداختی کمتر یا بیشتر از حد مجاز")
+
+
+ERROR_DICT = {
+    101: AlreadyPaidError,
+    -9: ZibalValidationError,
+    -10: InvalidIpOrMerchantError,
+    -11: MerchantIsNotActiveError,
+    -12: TooManyAttemptsError,
+    -15: TerminalIsSuspendError,
+    -16: SilverAccessError,
+    -17: BlueAccessError,
+    -30: FloatingWagesError,
+    -31: TerminalNotAllowAcceptWagesError,
+    -32: OverLoadMaxAmountError,
+    -33: InvalidWagesFloatingError,
+    -34: OverLoadMaxAmountError,
+    -35: WagesMaxLimitPartsError,
+    -36: MinimumWagesAmountError,
+    -37: InActiveIbanError,
+    -38: IbanNotSetError,
+    -39: WagesError,
+    -50: InvalidPaymentAmountError,
+    -51: FailedPaymentError,
+    -52: ZarinPalError,
+    -53: InvalidMerchantSessionError,
+    -54: InvalidAuthorityError
+}
