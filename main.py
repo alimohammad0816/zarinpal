@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, validate_call
 
 
 class CurrencyEnum(Enum):
@@ -59,6 +59,7 @@ class ZarinPal:
     def __init__(self, merchant_id: str) -> None:
         self.merchant_id: str = merchant_id
 
+    @validate_call
     def request(self, data: RequestInput) -> RequestResponse:
         result = requests.post(
             "https://api.zarinpal.com/pg/v4/payment/request.json",
@@ -74,6 +75,7 @@ class ZarinPal:
     def get_payment_link(authority: str) -> str:
         return f"https://www.zarinpal.com/pg/StartPay/{authority}"
 
+    @validate_call
     def verify(self, data: VerifyInput) -> VerifyResponse:
         result = requests.post(
             "https://api.zarinpal.com/pg/v4/payment/verify.json",
