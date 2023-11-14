@@ -1,8 +1,8 @@
 import requests
 from pydantic import validate_call
 
-from errors import ERROR_DICT
-from models import RequestInput, RequestResponse, VerifyInput, VerifyResponse, UnVerifiedResponse
+from .errors import ERROR_DICT
+from .models import RequestInput, RequestResponse, VerifyInput, VerifyResponse, UnVerifiedResponse
 
 
 class ZarinPal:
