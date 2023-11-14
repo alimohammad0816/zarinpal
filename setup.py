@@ -16,7 +16,7 @@ def get_requirements():
 
 setup(
     name='python-zarinpal',
-    version='0.1.0',
+    version='0.1.1',
     author='alimohammad0816',
     author_email='alimohammad0816@gmail.com',
     description='python library for zarin pal rest apis',
