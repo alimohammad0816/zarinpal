@@ -10,6 +10,7 @@ def get_requirements():
         for install in reqs:
             requirements_list.append(install.strip())
 
+    print(requirements_list)
     return requirements_list
 
 
@@ -19,12 +20,23 @@ setup(
     author='alimohammad0816',
     author_email='alimohammad0816@gmail.com',
     description='python library for zarin pal rest apis',
+    keywords="python zarinpal api wrapper",
     packages=find_packages(),
     install_requires=get_requirements(),
+    include_package_data=True,
+    license="LGPLv3",
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Communications :: Chat",
+        "Topic :: Internet",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     python_requires='>=3.8',
 )
