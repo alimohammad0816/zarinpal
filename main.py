@@ -15,12 +15,12 @@ class ZarinPal:
             "https://api.zarinpal.com/pg/v4/payment/request.json",
             json={"merchant_id": self.merchant_id, **data.model_dump(exclude_none=True)}
         ).json()
-        if result["data"] and result["data"]["code"] == "100":
+        if result["data"] and int(result["data"]["code"]) == 100:
             return RequestResponse(**result)
 
         else:
             raise ERROR_DICT.get(
-                result["errors"]["code"],
+                int(result["errors"]["code"]),
                 Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
             )
 
@@ -34,12 +34,12 @@ class ZarinPal:
             "https://api.zarinpal.com/pg/v4/payment/verify.json",
             json={"merchant_id": self.merchant_id, **data.model_dump(exclude_none=True)}
         ).json()
-        if result["data"] and result["data"]["code"] == "100":
+        if result["data"] and int(result["data"]["code"]) == 100:
             return VerifyResponse(**result)
 
         else:
             raise ERROR_DICT.get(
-                result["errors"]["code"],
+                int(result["errors"]["code"]),
                 Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
             )
 
@@ -56,11 +56,11 @@ class ZarinPal:
             "https://api.zarinpal.com/pg/v4/payment/unVerified.json",
             json={"merchant_id": self.merchant_id}
         ).json()
-        if result["data"] and result["data"]["code"] == "100":
+        if result["data"] and int(result["data"]["code"]) == 100:
             return UnVerifiedResponse(**result)
 
         else:
             raise ERROR_DICT.get(
-                result["errors"]["code"],
+                int(result["errors"]["code"]),
                 Exception(f'Code: {result["errors"]["code"]}, Message: {result["errors"]["message"]}')
             )
