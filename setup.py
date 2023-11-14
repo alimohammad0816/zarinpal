@@ -1,16 +1,15 @@
 from setuptools import setup, find_packages
-from pathlib import Path
+import pathlib
 
 
 def get_requirements():
     """Build the requirements list for this project"""
     requirements_list = []
 
-    with Path("requirements.txt").open() as reqs:
+    with pathlib.Path(pathlib.Path(__file__).parent / "requirements.txt").open() as reqs:
         for install in reqs:
             requirements_list.append(install.strip())
 
-    print(requirements_list)
     return requirements_list
 
 
