@@ -14,7 +14,7 @@ def get_requirements():
 
 
 setup(
-    name='python-zarinpal',
+    name='zarinpal',
     version='1.0.0',
     author='alimohammad0816',
     author_email='alimohammad0816@gmail.com',
